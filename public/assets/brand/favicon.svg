@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="160" viewBox="0 0 760 160" role="img" aria-labelledby="title desc">
+  <title id="title">Expense Tracker</title>
+  <desc id="desc">A refined E monogram with a rising arrow, representing organized expenses and financial progress.</desc>
+  <g transform="translate(20 28)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 12v80" stroke="#F4F7F8" stroke-width="12"/>
+    <path d="M23 14h48M23 52h37M23 90h48" stroke="#2783DE" stroke-width="12"/>
+    <path d="M53 72l18-18 14 14 19-23" stroke="#2783DE" stroke-width="8"/>
+    <path d="M91 45h13v13" stroke="#2783DE" stroke-width="8"/>
+  </g>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="156" y="101" fill="#F4F7F8" font-size="58" font-weight="700" letter-spacing="-1.8">Expense</text>
+    <text x="388" y="101" fill="#2783DE" font-size="58" font-weight="700" letter-spacing="-1.8">Tracker</text>
+  </g>
+</svg>

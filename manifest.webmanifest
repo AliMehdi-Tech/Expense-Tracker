@@ -1,0 +1,17 @@
+{
+  "name": "Expense Tracker SaaS",
+  "short_name": "Expense Tracker",
+  "description": "A secure, cloud-backed personal expense tracker.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06090d",
+  "theme_color": "#06090d",
+  "icons": [
+    {
+      "src": "/assets/brand/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

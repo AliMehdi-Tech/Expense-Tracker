@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="booting">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker</title>
+    <meta name="description"
+        content="Track, categorize, and analyze personal expenses with a fast, accessible expense tracker built with vanilla JavaScript. Search, filter, sort, and export a professional PDF report anytime." />
+    <meta name="theme-color" content="#071016" />
+    <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="Style.css" />
+</head>
+
+<body>
+    <div id="bootScreen" role="status" aria-live="polite">
+        <div class="boot-screen-inner">
+            <img class="boot-logo" src="/assets/brand/expense-tracker-logo-dark.svg" alt="Expense Tracker" width="190" height="40" />
+            <span class="boot-spinner" aria-hidden="true"></span>
+            <span class="boot-label">Preparing your workspace</span>
+        </div>
+    </div>
+    <a href="#mainContent" class="skip-link">Skip to main content</a>
+<section class="auth-shell" id="authShell" aria-labelledby="authHeading">
+        <div class="auth-card card">
+            <div class="auth-brand" aria-label="Expense Tracker">
+                <img class="brand-logo" src="/assets/brand/expense-tracker-logo-dark.svg" alt="Expense Tracker" width="228" height="48" />
+            </div>
+            <h1 id="authHeading">Login</h1>
+            <p class="auth-tagline">See where every rupee goes. Plan with clarity. Spend with confidence.</p>
+<form class="auth-form" id="loginPanel" novalidate>
+                <div class="form-row"><label for="loginEmail">Email</label><input type="email" id="loginEmail"
+                        autocomplete="email" required aria-describedby="loginEmailError" /><span class="field-error"
+                        id="loginEmailError" role="alert"></span></div>
+                <div class="form-row"><label for="loginPassword">Password</label>
+                    <div class="password-field"><input type="password" id="loginPassword"
+                            autocomplete="current-password" required aria-describedby="loginPasswordError" /><button
+                            type="button" class="password-toggle" data-password-target="loginPassword"
+                            aria-label="Show password"><svg aria-hidden="true" viewBox="0 0 24 24">
+                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                                <circle cx="12" cy="12" r="2.5" />
+                            </svg><span class="visually-hidden">Show</span></button></div><span class="field-error"
+                        id="loginPasswordError" role="alert"></span>
+                </div>
+                <button type="submit" class="btn btn-primary auth-submit" id="loginSubmit">Log in</button>
+            </form>
+            <p class="auth-switch" id="loginSwitch">Don't have an account? <button type="button" class="auth-switch-btn"
+                    data-auth-mode="register">Sign up</button></p>
+            <form class="auth-form" id="registerPanel" hidden novalidate>
+                <div class="form-row"><label for="registerEmail">Email</label><input type="email" id="registerEmail"
+                        autocomplete="email" required aria-describedby="registerEmailError" /><span class="field-error"
+                        id="registerEmailError" role="alert"></span></div>
+                <div class="form-row"><label for="registerPassword">Password</label>
+                    <div class="password-field"><input type="password" id="registerPassword" autocomplete="new-password"
+                            minlength="8" required
+                            aria-describedby="registerPasswordError registerPasswordHint" /><button type="button"
+                            class="password-toggle" data-password-target="registerPassword"
+                            aria-label="Show password"><svg aria-hidden="true" viewBox="0 0 24 24">
+                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                                <circle cx="12" cy="12" r="2.5" />
+                            </svg><span class="visually-hidden">Show</span></button></div><span class="field-hint"
+                        id="registerPasswordHint">At least 8 characters with a letter and a number.</span><span
+                        class="field-error" id="registerPasswordError" role="alert"></span>
+                </div>
+                <div class="form-row"><label for="registerPasswordConfirm">Confirm password</label>
+                    <div class="password-field"><input type="password" id="registerPasswordConfirm"
+                            autocomplete="new-password" minlength="8" required
+                            aria-describedby="registerPasswordConfirmError" /><button type="button"
+                            class="password-toggle" data-password-target="registerPasswordConfirm"
+                            aria-label="Show password"><svg aria-hidden="true" viewBox="0 0 24 24">
+                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                                <circle cx="12" cy="12" r="2.5" />
+                            </svg><span class="visually-hidden">Show</span></button></div><span class="field-error"
+                        id="registerPasswordConfirmError" role="alert"></span>
+                </div>
+                <button type="submit" class="btn btn-primary auth-submit" id="registerSubmit">Create Account</button>
+            </form>
+            <p class="auth-switch" id="registerSwitch" hidden>Already have an account? <button type="button"
+                    class="auth-switch-btn" data-auth-mode="login">Login</button></p>
+            <p class="auth-status" id="authStatus" role="status" aria-live="polite"></p>
+            <div class="auth-recovery-actions" id="authRecoveryActions" hidden>
+                <button type="button" class="auth-recovery-btn" id="sessionRetryBtn">Retry</button>
+                <button type="button" class="auth-recovery-btn" id="sessionLoginBtn">Return to login</button>
+            </div>
+        </div>
+    </section>
+    <main id="mainContent" hidden>
+        <div class="workspace-bar">
+            <div class="workspace-brand">
+                <img class="workspace-logo" src="/assets/brand/expense-tracker-logo-dark.svg" alt="Expense Tracker" width="190" height="40" />
+                <span class="workspace-subtitle">Personal finance workspace</span>
+            </div>
+            <div class="auth-actions" id="authActions" hidden>
+                <span class="user-email" id="userEmail"></span>
+                <button type="button" class="btn btn-secondary auth-logout-btn" id="logoutBtn">Log out</button>
+            </div>
+        </div>
+        <div class="page-container">
+            <section class="summary-panel" id="dashboard" aria-labelledby="summaryHeading">
+                <h2 id="summaryHeading" class="visually-hidden">Expense overview</h2>
+                <div class="summary-hero">
+                    <span class="summary-icon summary-icon-hero" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M3 7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" />
+                            <path d="M16 13h2" />
+                        </svg>
+                    </span>
+                    <p class="summary-hero-label">Total Expenses</p>
+                    <p class="summary-hero-value" id="statTotal">PKR 0</p>
+                </div>
+                <div class="summary-divider" aria-hidden="true"></div>
+                <div class="summary-secondary">
+                    <div class="summary-stat">
+                        <span class="summary-icon icon-month" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3.5" y="5" width="17" height="15" rx="2" />
+                                <path d="M3.5 9.5h17" />
+                                <path d="M8 3v3M16 3v3" />
+                            </svg>
+                        </span>
+                        <p class="summary-stat-label">This Month</p>
+                        <p class="summary-stat-value" id="statMonth">PKR 0</p>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="summary-icon icon-average" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 19V10M12 19V5M19 19v-6" />
+                            </svg>
+                        </span>
+                        <p class="summary-stat-label">Average Expense</p>
+                        <p class="summary-stat-value" id="statAverage">PKR 0</p>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="summary-icon icon-highest" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 16l6-6 4 4 6-7" />
+                                <path d="M15 6h5v5" />
+                            </svg>
+                        </span>
+                        <p class="summary-stat-label">Highest Expense</p>
+                        <p class="summary-stat-value" id="statHighest">PKR 0</p>
+                    </div>
+                </div>
+            </section>
+            <section class="migration-panel card" id="migrationPanel" aria-labelledby="migrationHeading" hidden>
+                <div>
+                    <p class="eyebrow">Local data found</p>
+                    <h2 id="migrationHeading">Move your saved expenses to the cloud</h2>
+                    <p id="migrationMessage">These expenses are still stored in this browser. Migrate them to your
+                        signed-in account to use them across devices.</p>
+                </div>
+                <button type="button" class="btn btn-primary" id="migrateExpensesBtn">Migrate local expenses</button>
+            </section>
+            <div class="workspace-grid">
+                <section class="form-section card" id="expenses" aria-labelledby="formHeading">
+                    <h2 id="formHeading">Add Expense</h2>
+                    <form id="expenseForm" class="expense-form" novalidate>
+                        <div class="form-row">
+                            <label for="titleInput">Title</label>
+                            <input type="text" id="titleInput" name="title" placeholder="e.g., Grocery shopping"
+                                maxlength="60" autocomplete="off" aria-describedby="titleError" />
+                            <span class="field-error" id="titleError" role="alert"></span>
+                        </div>
+                        <div class="form-row-group">
+                            <div class="form-row">
+                                <label for="amountInput">Amount (PKR)</label>
+                                <div class="input-with-prefix">
+                                    <span class="input-prefix" aria-hidden="true">PKR</span>
+                                    <input type="text" inputmode="decimal" id="amountInput" name="amount"
+                                        placeholder="0.00" aria-describedby="amountError" />
+                                </div>
+                                <span class="field-error" id="amountError" role="alert"></span>
+                            </div>
+                            <div class="form-row">
+                                <label for="dateInput">Date</label>
+                                <input type="date" id="dateInput" name="date" aria-describedby="dateError" />
+                                <span class="field-error" id="dateError" role="alert"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label for="categoryInput">Category</label>
+                            <div class="select-wrapper">
+                                <select id="categoryInput" name="category" aria-describedby="categoryError">
+                                    <option value="" disabled selected>Select category</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Bills">Bills</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Health">Health</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Travel">Travel</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <span class="field-error" id="categoryError" role="alert"></span>
+                        </div>
+                        <div class="form-row">
+                            <label for="paymentMethodInput">Payment Method</label>
+                            <div class="select-wrapper">
+                                <select id="paymentMethodInput" name="paymentMethod"
+                                    aria-describedby="paymentMethodError">
+                                    <option value="" disabled selected>Select method</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Digital Wallet">Digital Wallet</option>
+                                </select>
+                            </div>
+                            <span class="field-error" id="paymentMethodError" role="alert"></span>
+                        </div>
+                        <div class="form-row">
+                            <div class="label-row">
+                                <label for="notesInput">Notes</label>
+                                <span class="char-counter" id="notesCounter">0/200</span>
+                            </div>
+                            <textarea id="notesInput" name="notes" rows="3" maxlength="200"
+                                placeholder="Optional details about this expense"
+                                aria-describedby="notesError"></textarea>
+                            <span class="field-error" id="notesError" role="alert"></span>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Add Expense</button>
+                            <button type="button" class="btn btn-secondary" id="secondaryFormBtn">Reset</button>
+                        </div>
+                    </form>
+                </section>
+                <section class="list-section card" id="overview" aria-labelledby="listHeading">
+                    <div class="list-section-header">
+                        <div class="list-heading-group">
+                            <h2 id="listHeading">Your Expenses</h2>
+                            <p class="results-meta" id="resultsMeta"></p>
+                        </div>
+                        <div class="list-actions">
+                            <button type="button" class="icon-text-btn" id="exportPdfBtn">
+                                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+                                    <path d="M14 3v4h4" />
+                                    <path d="M9 13h6M9 16.5h6" />
+                                </svg>
+                                <span>Export PDF</span>
+                            </button>
+                            <button type="button" class="icon-text-btn is-danger" id="clearAllBtn">
+                                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 7h14" />
+                                    <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                    <path d="M7 7l1 12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2l1-12" />
+                                </svg>
+                                <span>Clear All</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="filters-bar">
+                        <div class="search-wrapper">
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="6.5" />
+                                <path d="M20 20l-4.3-4.3" />
+                            </svg>
+                            <label for="searchInput" class="visually-hidden">Search expenses</label>
+                            <input type="search" id="searchInput" placeholder="Search by title, category, notes..."
+                                autocomplete="off" />
+                        </div>
+                        <div class="filter-group">
+                            <label for="categoryFilter" class="visually-hidden">Filter by category</label>
+                            <div class="select-wrapper">
+                                <select id="categoryFilter">
+                                    <option value="all">All Categories</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Bills">Bills</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Health">Health</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Travel">Travel</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label for="paymentFilter" class="visually-hidden">Filter by payment method</label>
+                            <div class="select-wrapper">
+                                <select id="paymentFilter">
+                                    <option value="all">All Methods</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Digital Wallet">Digital Wallet</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label for="monthFilter" class="visually-hidden">Filter by month</label>
+                            <input type="month" id="monthFilter" />
+                        </div>
+                        <div class="filter-group amount-range">
+                            <label for="minAmountInput" class="visually-hidden">Minimum amount</label>
+                            <input type="number" id="minAmountInput" placeholder="Min PKR" min="0" step="0.01"
+                                inputmode="decimal" />
+                            <span aria-hidden="true">–</span>
+                            <label for="maxAmountInput" class="visually-hidden">Maximum amount</label>
+                            <input type="number" id="maxAmountInput" placeholder="Max PKR" min="0" step="0.01"
+                                inputmode="decimal" />
+                        </div>
+                        <p class="filter-error" id="amountFilterError" role="alert" hidden></p>
+                        <div class="filter-group">
+                            <label for="sortSelect" class="visually-hidden">Sort expenses</label>
+                            <div class="select-wrapper">
+                                <select id="sortSelect">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                    <option value="highest">Highest Amount</option>
+                                    <option value="lowest">Lowest Amount</option>
+                                    <option value="alphabetical">Title (A–Z)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-text" id="resetFiltersBtn">Reset Filters</button>
+                    </div>
+                    <div class="expense-list" id="expenseList"></div>
+                    <div class="empty-state" id="emptyState" hidden>
+                        <span class="empty-state-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 10l2.5-5h13L21 10" />
+                                <path d="M3 10v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8" />
+                                <path
+                                    d="M3 10h5.5a.5.5 0 0 1 .5.3l.8 1.9a1 1 0 0 0 .9.6h2.6a1 1 0 0 0 .9-.6l.8-1.9a.5.5 0 0 1 .5-.3H21" />
+                            </svg>
+                        </span>
+                        <h3 class="empty-state-title" id="emptyStateTitle">No expenses yet</h3>
+                        <p class="empty-state-message" id="emptyStateMessage">Add your first expense to see it here.</p>
+                        <button type="button" class="btn btn-primary" id="emptyStateActionBtn">Add an Expense</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="/assets/brand/expense-tracker-logo-dark.svg" alt="Expense Tracker" width="152" height="32" />
+                <span>A clearer view of every rupee.</span>
+            </div>
+            <div class="footer-meta">
+                <span class="footer-status" id="cloudStatus"><i aria-hidden="true"></i> Secure cloud workspace</span>
+                <span class="footer-divider" aria-hidden="true"></span>
+                <span>PKR · 2026</span>
+            </div>
+        </div>
+    </footer>
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+    <div class="loading-overlay" id="appLoading" role="status" aria-live="polite" hidden><span class="loading-spinner"
+            aria-hidden="true"></span><span id="loadingMessage">Restoring your session...</span></div>
+    <div class="modal-overlay" id="confirmModal" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+            <h2 class="modal-title" id="modalTitle">Delete expense?</h2>
+            <p class="modal-message" id="modalMessage"></p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="modalConfirmBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="Script.js"></script>
+</body>
+
+</html>
